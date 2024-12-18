@@ -3,6 +3,12 @@
 # Data base bath
 DB_PATH = "data/shared_data.db"
 
+# Paths of advertising interface
+ADVERTISING_IMAGE_PATH: str = "assets/images/advertising/"
+ADVERTISING_VIDEO_PATH: str = "assets/videos/"
+ADVERTISING_AUDIO_PATH: str = "assets/audio/"
+
+
 
 # Color Palette
 COOL_GRAY_LIGHT: tuple[int, int, int] = (218, 255, 247)

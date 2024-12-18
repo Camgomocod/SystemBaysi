@@ -1,5 +1,5 @@
 import sqlite3
-from ..assets.confing import DB_PATH
+from ..assets.settings import DB_PATH
 
 
 class DataBase:
