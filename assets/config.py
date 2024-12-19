@@ -6,9 +6,12 @@ DB_PATH = "data/shared_data.db"
 # Paths of advertising interface
 ADVERTISING_IMAGE_PATH: str = "assets/images/advertising/"
 ADVERTISING_VIDEO_PATH: str = "assets/videos/"
-ADVERTISING_AUDIO_PATH: str = "assets/audio/"
+ADVERTISING_AUDIO_PATH: str = "assets/audio/advertising/"
 
-
+# Paths of slot machine interface
+SLOT_MACHINE_IMAGE_PATH: str = "assets/images/slot_machine/"
+SLOT_MACHINE_AUDIO_PATH: str = "assets/audio/slot_machine/"
+SLOT_MACHINE_FONT_PATH: str = "assets/fonts/"
 
 # Color Palette
 COOL_GRAY_LIGHT: tuple[int, int, int] = (218, 255, 247)

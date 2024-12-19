@@ -23,8 +23,11 @@ class InternalData:
         except Exception as e:
             print(f"Exception {e}")
 
-    def get_ip(self) -> str:
+    def get_host(self) -> str:
         return os.getenv("IP_ADDRESS", "0.0.0.0")
 
     def get_port(self) -> int:
         return int(os.getenv("PORT", "9999"))
+    
+    def get_counter(self) -> int:
+        return int(os.getenv("COUNTER", "0"))

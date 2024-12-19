@@ -24,7 +24,7 @@ class Advertising:
         self.gradient_surface = pygame.Surface((self.screen_width, self.screen_height))
         self.icon = pygame.image.load(f"{ADVERTISING_IMAGE_PATH}icon_plant.png")
         pygame.mouse.set_visible(False)
-        pygame.display.set_caption("Interfaz Publicitaria")
+        pygame.display.set_caption("Advertising Interface")
         pygame.display.set_icon(self.icon)
 
         self.padding = 100
@@ -89,7 +89,7 @@ class Advertising:
         )
     
     def draw_decorations(self, screen) -> None:
-        """Dibuja las decoraciones en la pantalla."""
+        """Draw decorations on the screen."""
         screen.blit(self.decoration_images["top_left"], (0, 0))
         screen.blit(
             self.decoration_images["bottom_left"],
@@ -112,7 +112,6 @@ class Advertising:
                 0,
             ),
         )
-
 
     def load_and_resize_video(self, video_path: str) -> mp.VideoFileClip:
         """Load a video file and resize it to a target resolution.
@@ -156,9 +155,9 @@ class Advertising:
             pygame.mixer.music.load(audio_path)
             pygame.mixer.music.play()
         except Exception as e:
-            print(f"Error al procesar {e}")
+            print(f"Error processing {e}")
 
-        # Reproduce el video
+        # Play the video
         for frame in clip.iter_frames(fps=clip.fps, dtype="uint8"):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (
@@ -217,11 +216,11 @@ class Advertising:
         return True
 
     def run(self, screen) -> None:
-        """Renderiza un solo cuadro del video publicitario."""
+        """Render a single frame of the advertising video."""
         if not self.running or not self.video_files:
             return
 
-        # Cargar el video actual si no está cargado
+        # Load the current video if not loaded
         if not hasattr(self, "current_clip") or self.current_clip is None:
             video_path = self.video_files[self.video_index]
             self.current_clip = self.load_and_resize_video(video_path)
@@ -231,42 +230,41 @@ class Advertising:
         try:
             frame = next(self.frame_iterator)
         except StopIteration:
-            # Pasar al siguiente video
+            # Move to the next video
             self.video_index = (self.video_index + 1) % len(self.video_files)
             self.current_clip = None
             self.frame_iterator = None
             return
 
-        # Convertir el cuadro a una superficie y mostrarlo
+        # Convert the frame to a surface and display it
         surface = self.clip_to_surface(frame)
         x_position = (self.screen_width - self.current_clip.size[0]) // 2
-        screen.fill((0, 0, 0))  # Limpiar la pantalla antes de dibujar el nuevo cuadro
+        screen.fill((0, 0, 0))  # Clear the screen before drawing the new frame
         screen.blit(self.gradient_surface, (0, 0))
         screen.blit(surface, (x_position, 0))
-        self.draw_decorations(screen)  # Llamada al nuevo método
+        self.draw_decorations(screen)  # Call the new method
 
-        # Asegúrate de que el FPS de la pantalla esté sincronizado con el video
+        # Ensure the screen FPS is synchronized with the video
         self.clock.tick(self.current_clip.fps)
 
     def start_audio(self, clip: mp.VideoFileClip) -> None:
-        """Inicia la reproducción de audio del video."""
+        """Start the audio playback of the video."""
         audio_path = f"{ADVERTISING_AUDIO_PATH}temp_audio.mp3"
         try:
             clip.audio.write_audiofile(audio_path, fps=44100)
             pygame.mixer.music.load(audio_path)
             pygame.mixer.music.play()
         except Exception as e:
-            print(f"Error al procesar el audio: {e}")
-
-
+            print(f"Error processing audio: {e}")
 
     def stop(self) -> None:
         """Stop video playback and clean up resources."""
         self.running = False
         pygame.mixer.music.stop()
         pygame.mixer.music.unload()
-
-
-        # No cerrar pygame.display.quit() ni pygame.quit() aquí para evitar cerrar la ventana principal
+        self.current_clip = None  # Reset the current clip
+        self.frame_iterator = None  # Reset the frame iterator
+        self.video_index = 0  # Reset the video index
+        # Do not close pygame.display.quit() or pygame.quit() here to avoid closing the main window
 
 
