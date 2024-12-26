@@ -12,7 +12,10 @@ from server.server_socket import ServerSocket
 from logic.manage_interface import InterfaceManager
 
 class Init:
+    """Class to initialize the application and handle the initial interface."""
+
     def __init__(self) -> None:
+        """Initialize Pygame, set up the display, and initialize components."""
         pygame.init()
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.screen_width, self.screen_height = self.screen.get_size()
@@ -41,42 +44,42 @@ class Init:
         # Actualizar el estado de la conexión después de inicializar el socket
         self.update_connection_state()
 
-    def update_connection_state(self):
-        """Actualizar el estado de la conexión desde el socket."""
+    def update_connection_state(self) -> None:
+        """Update the connection state from the socket."""
         self.connection_established = self.socket_client.connection_established
         if not self.connection_established:
             print("Esperando conexión con el servidor...")
 
-    def register_command_handlers(self):
-        """Registrar los manejadores de comandos."""
+    def register_command_handlers(self) -> None:
+        """Register command handlers for the server commands."""
         self.socket_client.register_callback("sorteo", self.handle_sorteo)
         self.socket_client.register_callback("publicidad", self.handle_publicidad)
         self.socket_client.register_callback("button", self.handle_button)
         self.socket_client.register_callback("salir", self.handle_salir)
 
-    def handle_sorteo(self):
-        """Manejar el comando de sorteo."""
+    def handle_sorteo(self) -> None:
+        """Handle the 'sorteo' command."""
         self.first_command_received = True
         self.interface_manager.switch_to_slot_machine()
         self.interface_manager.run()
 
-    def handle_publicidad(self):
-        """Manejar el comando de publicidad."""
+    def handle_publicidad(self) -> None:
+        """Handle the 'publicidad' command."""
         self.first_command_received = True
         self.interface_manager.switch_to_advertising()
         self.interface_manager.run()
 
-    def handle_button(self):
-        """Manejar el comando de botón."""
+    def handle_button(self) -> None:
+        """Handle the 'button' command."""
         pass  # Implementar si es necesario
 
-    def handle_salir(self):
-        """Manejar el comando de salir."""
+    def handle_salir(self) -> None:
+        """Handle the 'salir' command."""
         self.interface_manager.stop()
         self.stop()
 
-    def setup_pygame_window(self):
-        """Configurar elementos de Pygame"""
+    def setup_pygame_window(self) -> None:
+        """Set up Pygame window elements."""
         # Ajustar el tamaño del logo proporcionalmente a la pantalla
         self.size_logo = (int(self.screen_width * 0.15), int(self.screen_height * 0.15))
         
@@ -123,19 +126,32 @@ class Init:
         )
 
     def get_game_state(self) -> str:
+        """
+        Get the current game state.
+
+        Returns:
+            str: The current game state.
+        """
         return self.shared_data.get_value_game_state("state")
 
     def send_command(self, command: str) -> None:
+        """
+        Send a command to the server.
+
+        Args:
+            command (str): The command to send.
+        """
         self.socket_client.send_command(command)
 
     def stop(self) -> None:
+        """Stop the application and clean up resources."""
         self.running = False
         self.socket_client.stop()
         pygame.quit()
         sys.exit()
 
     def run(self) -> None:
-        """Método principal que inicia la aplicación."""
+        """Main method to start the application."""
         self.show_initial_screen()
 
         running = True
@@ -154,10 +170,14 @@ class Init:
 
         self.stop()
 
-    def draw_gradient_surface(
-        self, top_color: tuple[int, int, int], bottom_color: tuple[int, int, int]
-    ):
-        """Dibujar el gradiente en toda la pantalla."""
+    def draw_gradient_surface(self, top_color: tuple[int, int, int], bottom_color: tuple[int, int, int]) -> None:
+        """
+        Draw a gradient on the entire screen.
+
+        Args:
+            top_color (tuple[int, int, int]): The top color of the gradient.
+            bottom_color (tuple[int, int, int]): The bottom color of the gradient.
+        """
         for i in range(self.screen_height):
             color = (
                 int(
@@ -178,7 +198,7 @@ class Init:
             )
 
     def show_initial_screen(self) -> None:
-        """Mostrar la pantalla inicial a pantalla completa."""
+        """Show the initial screen in full screen mode."""
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

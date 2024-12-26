@@ -1,8 +1,9 @@
 import sqlite3
 from assets.config import DB_PATH
 
-
 class DataBase:
+    """Class to handle database operations."""
+
     def __init__(self) -> None:
         self.conn = None
         self.init_db()  # Initialize the database when the class is instantiated

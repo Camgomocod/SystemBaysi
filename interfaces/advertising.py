@@ -38,8 +38,8 @@ class Advertising:
         self.running = True
         self.clock = pygame.time.Clock()
         self.video_index = 0
-        self.audio_started = False  # Nuevo flag para controlar el inicio del audio
-        self.should_exit = False  # Nuevo flag para controlar la salida del bucle de video
+        self.audio_started = False  # New flag to control the start of the audio
+        self.should_exit = False  # New flag to control the exit of the video loop
 
         self.decoration_images = {
             "top_left": pygame.image.load(f"{ADVERTISING_IMAGE_PATH}left_lamp.png"),
@@ -59,7 +59,7 @@ class Advertising:
         self.current_audio_path = None
         self.audio_index = 0
         self.is_stopping = False
-        self.last_frame = None  # Guardar el último frame para evitar pantalla negra
+        self.last_frame = None  # Save the last frame to avoid black screen
 
     def draw_gradient_surface(self) -> None:
         """Draw a gradient background for the display surface."""
@@ -121,7 +121,8 @@ class Advertising:
         )
         
     def load_and_resize_video(self, video_path: str) -> mp.VideoFileClip:
-        """Load a video file and resize it to a target resolution.
+        """
+        Load a video file and resize it to a target resolution.
 
         Args:
             video_path (str): The path to the video file.
@@ -142,7 +143,8 @@ class Advertising:
             return None
 
     def clip_to_surface(self, frame) -> pygame.Surface:
-        """Convert a video frame to a Pygame surface.
+        """
+        Convert a video frame to a Pygame surface.
 
         Args:
             frame (ndarray): The video frame as a NumPy array.
@@ -153,28 +155,38 @@ class Advertising:
         return pygame.image.frombuffer(frame.tobytes(), frame.shape[1::-1], "RGB")
 
     def get_temp_audio_path(self) -> str:
-        """Genera una ruta única para cada archivo de audio temporal."""
+        """
+        Generate a unique path for each temporary audio file.
+
+        Returns:
+            str: The path to the temporary audio file.
+        """
         self.audio_index += 1
         return f"{ADVERTISING_AUDIO_PATH}temp_audio_{self.audio_index}.mp3"
 
     def load_audio_for_clip(self) -> bool:
-        """Cargar y preparar el audio para el clip actual."""
+        """
+        Load and prepare the audio for the current clip.
+
+        Returns:
+            bool: True if the audio was loaded successfully, False otherwise.
+        """
         try:
-            # Detener y limpiar audio anterior
+            # Stop and clear previous audio
             if pygame.mixer.music.get_busy():
                 pygame.mixer.music.stop()
                 pygame.mixer.music.unload()
             
-            # Limpiar archivo anterior si existe
+            # Clear previous file if it exists
             if self.current_audio_path and os.path.exists(self.current_audio_path):
                 try:
                     pygame.mixer.music.unload()
-                    pygame.time.wait(100)  # Pequeña pausa para asegurar que se libere
+                    pygame.time.wait(100)  # Small pause to ensure it is released
                     os.remove(self.current_audio_path)
                 except Exception as e:
                     print(f"Error removing old audio: {e}")
 
-            # Generar nueva ruta para el audio
+            # Generate new path for the audio
             self.current_audio_path = self.get_temp_audio_path()
 
             if self.current_clip and self.current_clip.audio:
@@ -205,7 +217,7 @@ class Advertising:
                 self.frame_iterator = self.current_clip.iter_frames(fps=8.3, dtype="uint8")
                 self.start_audio(self.current_clip)
 
-            # Mantener el último frame mientras se carga el siguiente video
+            # Keep the last frame while loading the next video
             if self.last_frame is not None:
                 screen.blit(self.gradient_surface, (0, 0))
                 screen.blit(self.last_frame, ((self.screen_width - self.current_clip.size[0]) // 2, 0))
@@ -214,17 +226,17 @@ class Advertising:
             try:
                 frame = next(self.frame_iterator)
                 surface = self.clip_to_surface(frame)
-                self.last_frame = surface  # Guardar el frame actual
+                self.last_frame = surface  # Save the current frame
                 
                 screen.blit(self.gradient_surface, (0, 0))
                 screen.blit(surface, ((self.screen_width - self.current_clip.size[0]) // 2, 0))
                 self.draw_decorations(screen)
                 
-                # Sincronizar FPS con el video original
+                # Synchronize FPS with the original video
                 self.clock.tick(10)
                 
             except StopIteration:
-                # Mantener el último frame mientras se prepara el siguiente video
+                # Keep the last frame while preparing the next video
                 if self.last_frame is not None:
                     screen.blit(self.gradient_surface, (0, 0))
                     screen.blit(self.last_frame, ((self.screen_width - self.current_clip.size[0]) // 2, 0))
@@ -237,11 +249,16 @@ class Advertising:
                 return
 
         except Exception as e:
-            print(f"Error en reproducción: {e}")
+            print(f"Error during playback: {e}")
             self.cleanup_current_video()
 
     def start_audio(self, clip: mp.VideoFileClip) -> None:
-        """Start the audio playback of the video."""
+        """
+        Start the audio playback of the video.
+
+        Args:
+            clip (VideoFileClip): The video clip whose audio will be played.
+        """
         self.current_audio_path = f"{ADVERTISING_AUDIO_PATH}temp_audio_{self.audio_index}.mp3"
         try:
             if os.path.exists(self.current_audio_path):
@@ -254,8 +271,8 @@ class Advertising:
         except Exception as e:
             print(f"Error processing audio: {e}")
 
-    def cleanup_current_video(self):
-        """Limpiar recursos del video actual."""
+    def cleanup_current_video(self) -> None:
+        """Clean up resources of the current video."""
         try:
             if pygame.mixer.music.get_busy():
                 pygame.mixer.music.stop()
@@ -272,7 +289,7 @@ class Advertising:
                     pass
                 
         except Exception as e:
-            print(f"Error limpiando recursos: {e}")
+            print(f"Error cleaning up resources: {e}")
 
     def stop(self) -> None:
         """Stop video playback and clean up resources."""
@@ -280,7 +297,7 @@ class Advertising:
         self.running = False
         self.cleanup_current_video()
         
-        # Limpiar todos los archivos de audio temporales
+        # Clean up all temporary audio files
         for i in range(self.audio_index + 1):
             temp_path = f"{ADVERTISING_AUDIO_PATH}temp_audio_{i}.mp3"
             if os.path.exists(temp_path):

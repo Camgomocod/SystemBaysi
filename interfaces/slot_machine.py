@@ -22,7 +22,10 @@ from assets.config import (
 
 
 class SlotMachine:
+    """Class to handle slot machine game interface."""
+
     def __init__(self) -> None:
+        """Initialize Pygame, set up the display, and load game assets."""
         self.shared_data = DataBase()
         self.internal_data = InternalData()
 
@@ -106,6 +109,7 @@ class SlotMachine:
         self.init_joystick()
 
     def init_joystick(self) -> None:
+        """Initialize the joystick if available."""
         pygame.joystick.init()
         if pygame.joystick.get_count() > 0:
             self.joystick = pygame.joystick.Joystick(0)
@@ -114,10 +118,22 @@ class SlotMachine:
             print("No joystick detected.")
 
     def get_state(self) -> str:
+        """
+        Get the current state of the button.
+
+        Returns:
+            str: The current state of the button.
+        """
         button_state = self.shared_data.get_value_state("active_button")
         return button_state
 
     def is_winner_attemp(self) -> bool:
+        """
+        Check if the current attempt is a winning attempt.
+
+        Returns:
+            bool: True if the attempt is a winning attempt, False otherwise.
+        """
         if self.spin_count:
             return self.spin_count % 5 == 0
         else:
@@ -131,6 +147,7 @@ class SlotMachine:
         width: int,
         height: int,
     ) -> None:
+        """Draw a gradient background on the given surface."""
         for i in range(height):
             color = (
                 color_top[0] + (color_bottom[0] - color_top[0]) * i / height,
@@ -140,6 +157,7 @@ class SlotMachine:
             pygame.draw.line(surface, color, (0, i), (width, i))
 
     def draw_grid(self) -> None:
+        """Draw the grid for the slot machine."""
         total_width = 3 * self.cell_width
         total_height = self.cell_height
         grid_x = (self.WIDTH - total_width) // 2
@@ -389,7 +407,7 @@ class SlotMachine:
                 self.clock.tick(FPS)
 
     def stop(self) -> None:
-        """Stop slot machine and clean up resources without closing Pygame."""
+        """Stop the slot machine game and clean up resources."""
         self.winner_sound.stop()
         self.lose_sound.stop()
         self.running = False
@@ -427,7 +445,7 @@ class SlotMachine:
         )
 
     def run(self, screen) -> None:
-        """Run the slot machine interface with the provided screen."""
+        """Run the slot machine game loop."""
         self.running = True
         self.start_time = pygame.time.get_ticks()
         counter = self.internal_data.get_counter()
