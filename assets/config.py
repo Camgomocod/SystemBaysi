@@ -13,6 +13,9 @@ SLOT_MACHINE_IMAGE_PATH: str = "assets/images/slot_machine/"
 SLOT_MACHINE_AUDIO_PATH: str = "assets/audio/slot_machine/"
 SLOT_MACHINE_FONT_PATH: str = "assets/fonts/"
 
+# Paths of init interface
+INIT_IMAGE_PATH: str = "assets/images/init/"
+
 # Color Palette
 COOL_GRAY_LIGHT: tuple[int, int, int] = (218, 255, 247)
 CHARTREUSE: tuple[int, int, int] = (210, 223, 100)

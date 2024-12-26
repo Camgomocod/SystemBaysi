@@ -1,5 +1,5 @@
-from interfaces.init import Game 
+from interfaces.init import Init
 
 if __name__ == "__main__":
-    game = Game()
-    game.run()
+    init_interface = Init()
+    init_interface.run()
