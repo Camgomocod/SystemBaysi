@@ -26,29 +26,29 @@ class Init:
         self.first_command_received = False
         self.connection_established = False
 
-        # Inicializar el socket y el interface manager con la pantalla existente
+        # Initialize the socket and interface manager with the existing screen
         self.socket_client = ServerSocket()
         self.interface_manager = InterfaceManager(self.screen)
         
-        # Registrar callbacks para los comandos
+        # Register callbacks for commands
         self.register_command_handlers()
         
         self.last_game_state = None
         
-        # Setup de la ventana de Pygame
+        # Setup Pygame window
         self.setup_pygame_window()
         
-        # Crear superficie del gradiente del tamaño completo de la pantalla
+        # Create gradient surface for the entire screen
         self.gradient_surface = pygame.Surface((self.screen_width, self.screen_height))
 
-        # Actualizar el estado de la conexión después de inicializar el socket
+        # Update connection state after initializing the socket
         self.update_connection_state()
 
     def update_connection_state(self) -> None:
         """Update the connection state from the socket."""
         self.connection_established = self.socket_client.connection_established
         if not self.connection_established:
-            print("Esperando conexión con el servidor...")
+            print("Waiting for server connection...")
 
     def register_command_handlers(self) -> None:
         """Register command handlers for the server commands."""
@@ -71,7 +71,7 @@ class Init:
 
     def handle_button(self) -> None:
         """Handle the 'button' command."""
-        pass  # Implementar si es necesario
+        pass  # Implement if necessary
 
     def handle_salir(self) -> None:
         """Handle the 'salir' command."""
@@ -80,7 +80,7 @@ class Init:
 
     def setup_pygame_window(self) -> None:
         """Set up Pygame window elements."""
-        # Ajustar el tamaño del logo proporcionalmente a la pantalla
+        # Adjust the logo size proportionally to the screen
         self.size_logo = (int(self.screen_width * 0.15), int(self.screen_height * 0.15))
         
         pygame.display.set_caption("BAYSI")
@@ -93,7 +93,7 @@ class Init:
             center=(self.screen_width // 2, self.screen_height // 2)
         )
 
-        # Ajustar tamaños de elementos UI proporcionalmente
+        # Adjust UI element sizes proportionally
         self.button_size = int(self.screen_width * 0.03)
         self.button_rect = pygame.Rect(
             self.screen_width * 0.05, 
@@ -111,14 +111,14 @@ class Init:
             self.label_height
         )
 
-        # Ajustar tamaño de la fuente
+        # Adjust font size
         self.small_font = pygame.font.Font(None, int(self.screen_height * 0.03))
         
         self.label_active = False
         self.input_text = ""
-        self.place_holder_text = "Introduce la nueva Ip"
+        self.place_holder_text = "Enter new IP"
 
-        # Cargar y escalar el icono de configuración
+        # Load and scale the settings icon
         self.gear_icon = pygame.image.load(f"{INIT_IMAGE_PATH}setting.png")
         self.gear_icon = pygame.transform.scale(
             self.gear_icon,
@@ -204,10 +204,10 @@ class Init:
                 if event.type == pygame.QUIT:
                     self.stop()
 
-            # Actualizar el estado de la conexión antes de dibujar
+            # Update the connection state before drawing
             self.update_connection_state()
             
-            # Dibujar directamente en la pantalla completa
+            # Draw directly on the full screen
             if self.connection_established:
                 self.draw_gradient_surface(CHARTREUSE, AQUAMARINE)
             else:
